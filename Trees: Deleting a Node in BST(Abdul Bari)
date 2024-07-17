@@ -1,0 +1,44 @@
+class Solution {
+public:
+    int height( Node *root) {
+        if (root == NULL) return 0;
+        int x = height(root->left);
+        int y = height(root->right);
+        return x > y ? x + 1 : y + 1;
+    }
+
+    struct Node *InPre(struct Node *root) {
+        while (root && root->right != NULL) {
+            root = root->right;
+        }
+        return root;
+    }
+
+    struct Node *InSucc(struct Node *root) {
+        while (root && root->left != NULL) {
+            root = root->left;
+        }
+        return root;
+    }
+
+    TreeNode* deleteNode(TreeNode* root, int key) {
+        if (root == NULL) return NULL;
+
+        if (key < root->data) {
+            root->left = deleteNode(root->left, key);
+        } else if (key > root->data) {
+            root->right = deleteNode(root->right, key);
+        } else {
+            if (height(root->left) > height(root->right)) {
+                struct Node* q = InPre(root->left);
+                root->data = q->data;
+                root->left = deleteNode(root->left, q->data);
+            } else {
+                struct Node* q = InSucc(root->right);
+                root->data = q->data;
+                root->right = deleteNode(root->right, q->data);
+            }
+        }
+        return root;
+    }
+};
